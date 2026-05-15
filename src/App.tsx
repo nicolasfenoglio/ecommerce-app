@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
+import type { CartItem, Product } from "./types";
+import useCart from "./hooks/useCart";
 
-type Product = {
-  id: number;
-  title: string;
-  description: string;
-};
+
 
 function App() {
   const [categories, setCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [products, setProducts] = useState<Product[]>([]);
+  const { cart, agregarAlCarrito } = useCart();
+  
+
 
   useEffect(() => {
     fetch("https://dummyjson.com/products/category-list")
@@ -28,6 +29,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => setProducts(data.products));
   }, [selectedCategory]);
+
 
   return (
     <>
@@ -49,8 +51,12 @@ function App() {
         <div key={product.id}>
           <h2>{product.title}</h2>
           <p>{product.description}</p>
+          <button onClick={() => agregarAlCarrito(product)}>
+            Agregar al carrito
+          </button>
         </div>
       ))}
+
     </>
   );
 }
